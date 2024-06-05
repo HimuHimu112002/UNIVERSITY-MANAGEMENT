@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
-import { StudentServices, getAllStudentsFromDB, updateStudentFromDB } from "./student.service";
+import { StudentServices, getAllStudentsFromDB, getFilterSearchStudentsFromDB, getFilterStudentsFromDB, updateStudentFromDB } from "./student.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { Request, Response } from "express";
 import { Student } from "./student.model";
@@ -27,6 +27,42 @@ export const getAllStudents = async (req: Request, res: Response) => {
       success: true,
       message: "Student data find success !",
       data: result,
+    });
+  }catch(err: any){
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      error: err,
+    })
+  }
+};
+
+export const getFilterStudents = async (req: Request, res: Response) => {
+  try{
+    const result = await getFilterStudentsFromDB(req.query);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Student data filtering success !",
+      data: result,
+    });
+  }catch(err: any){
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      error: err,
+    })
+  }
+};
+
+export const getSearchingStudents = async (req: Request, res: Response) => {
+  try{
+    const result1 = await getFilterSearchStudentsFromDB(req.query);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Student data filtering success !",
+      data: result1,
     });
   }catch(err: any){
     return res.status(400).json({
@@ -85,5 +121,4 @@ export const updatetudent = async (req: Request, res: Response) => {
 
 export const StudentControllers = {
   getSingleStudent,
-  deleteStudent,
 };

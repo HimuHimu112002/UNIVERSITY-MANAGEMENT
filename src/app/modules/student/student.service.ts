@@ -4,7 +4,7 @@ import { Student } from './student.model';
 import mongoose, { Error } from 'mongoose';
 import { UserModel } from '../user/user.model';
 import { TStudent } from './student.interface';
-import { object } from 'zod';
+import { object, string } from 'zod';
 
 export const getAllStudentsFromDB = async () => {
   const result = await Student.find({}).populate('admissionSemester').populate({
@@ -18,6 +18,73 @@ export const getAllStudentsFromDB = async () => {
   }else{
     return result;
   }
+};
+
+
+export const getFilterStudentsFromDB = async (query: Record<string, unknown>) => {
+
+  // filter section
+  let searchTerm = '';
+  if(query?.searchTerm){
+    searchTerm = query?.searchTerm as string;
+  }
+  const result = await Student.find({
+    $or: ['email', 'name.firstName', 'presentAddress'].map((field)=>({
+      [field]: {$regex: searchTerm, $options: 'i'}
+    }))
+  }).populate('admissionSemester').populate({
+    path: 'admissionDepartment',
+    populate:{
+      path: 'academicFaculty'
+    }
+  });
+  if(result.length == 0){
+    throw new AppError(httpStatus.NOT_FOUND,"Data Not Found !")
+  }else{
+    return result;
+  }
+};
+
+export const getFilterSearchStudentsFromDB = async (query: Record<string, unknown>) => {
+  const queryObj = {...query}
+  // filter section
+  let searchTerm = '';
+  if(query?.searchTerm){
+    searchTerm = query?.searchTerm as string;
+  }
+
+  const searchQuery = Student.find({
+    $or: ['email', 'name.firstName', 'presentAddress'].map((field)=>({
+      [field]: {$regex: searchTerm, $options: 'i'}
+    }))
+  })
+
+  const excludeFields = ['searchTerm', 'sort', 'limit']
+  excludeFields.forEach(el => delete queryObj[el])
+
+  const filterQuery = searchQuery.find(queryObj).populate('admissionSemester').populate({
+    path: 'admissionDepartment',
+    populate:{
+      path: 'academicFaculty'
+    }
+  });
+
+  // assending and dessending order sort
+  let sort = '-createdAt'
+  if(query.sort){
+    sort = query.sort as string
+  }
+  const result1 = filterQuery.sort(sort)
+  
+  // limit query
+  let limit = 1
+  if(query.limit){
+    limit = Number(query.limit)
+  }
+  const limitQuery = await result1.limit(limit)
+  console.log(limitQuery)
+  //return result1;
+  return limitQuery;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
