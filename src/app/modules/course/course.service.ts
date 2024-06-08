@@ -108,7 +108,6 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     const result = await Course.findById(id).populate(
       'preRequisiteCourses.course',
     );
-
     return result;
   } catch (err) {
     await session.abortTransaction();

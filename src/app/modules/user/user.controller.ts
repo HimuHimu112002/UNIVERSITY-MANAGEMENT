@@ -1,5 +1,7 @@
-import {RequestHandler } from "express";
+import {RequestHandler, Response } from "express";
 import {
+  createAdminIntoDB,
+  createFacultyIntoDB,
   createUser,
   getAllUserService,
   getSingleUserService,
@@ -65,8 +67,36 @@ const getSingleUserController: RequestHandler = async (req, res) => {
   }
 };
 
+const createFacultyController: RequestHandler = async (req, res) => {
+  const { password, faculty: facultyData } = req.body;
+
+  const result = await createFacultyIntoDB(password, facultyData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty is created succesfully',
+    data: result,
+  });
+};
+
+const createAdmin: RequestHandler = async (req, res) => {
+  const { password, admin: adminData } = req.body;
+
+  const result = await createAdminIntoDB(password, adminData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin is created succesfully',
+    data: result,
+  });
+};
+
 export const UserController = {
   createUserController,
   getAllUserController,
   getSingleUserController,
+  createFacultyController,
+  createAdmin
 };
