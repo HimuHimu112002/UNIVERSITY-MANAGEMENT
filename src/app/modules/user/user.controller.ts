@@ -9,9 +9,15 @@ import {
 import bcrypt from "bcrypt";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
+import { UserModel } from "./user.model";
 
 const createUserController: RequestHandler = async (req,res,next) => {
   try {
+  // let user_role = req.headers.user_role
+  // const result = await UserModel.findOne({role: user_role});
+  // if(user_role === result){
+  //   console.log("done")
+  // }
     const { password, student: studentData } = req.body;
     //const {password, user akhen just user dile kaj korena} = req.body;
     bcrypt.hash(password, 10, async function (err, hash) {

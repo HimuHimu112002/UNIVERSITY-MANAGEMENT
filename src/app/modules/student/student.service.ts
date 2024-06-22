@@ -4,10 +4,10 @@ import { Student } from './student.model';
 import mongoose, { Error } from 'mongoose';
 import { UserModel } from '../user/user.model';
 import { TStudent } from './student.interface';
-import { object, string } from 'zod';
+import { Request } from 'express';
 
 export const getAllStudentsFromDB = async () => {
-  const result = await Student.find({}).populate('admissionSemester').populate({
+  const result = await Student.find().populate('user').populate('admissionSemester').populate({
     path: 'admissionDepartment',
     populate:{
       path: 'academicFaculty'
@@ -19,7 +19,6 @@ export const getAllStudentsFromDB = async () => {
     return result;
   }
 };
-
 
 export const getFilterStudentsFromDB = async (query: Record<string, unknown>) => {
 

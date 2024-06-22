@@ -1,12 +1,11 @@
 import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
 import { StudentServices, getAllStudentsFromDB, getFilterSearchStudentsFromDB, getFilterStudentsFromDB, updateStudentFromDB } from "./student.service";
-import { catchAsync } from "../../utils/catchAsync";
 import { Request, Response } from "express";
 import { Student } from "./student.model";
 import AppError from "../../errors/AppError";
 
-const getSingleStudent = catchAsync(async (req,res) => {
+const getSingleStudent = async (req: Request,res: Response) => {
 
   const { id } = req.params;
   const result = await StudentServices.getSingleStudentFromDB(id);
@@ -17,7 +16,7 @@ const getSingleStudent = catchAsync(async (req,res) => {
     message: "Student is retrieved succesfully",
     data: result,
   });
-})
+}
 
 export const getAllStudents = async (req: Request, res: Response) => {
   try{

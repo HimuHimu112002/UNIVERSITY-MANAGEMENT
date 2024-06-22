@@ -1,12 +1,10 @@
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { catchAsync } from "../../utils/catchAsync";
 import { createAcademicDepartmentDB, getAllAcademicDepartmentService, getSingleAcademicDepartmentService } from "./academicDepartment.service";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AcademicDepartmentyModel } from "./academicDepartment.model";
 
-export const createAcademicDepartmentController = catchAsync(
-  async (req, res, next) => {
+export const createAcademicDepartmentController = async (req: Request, res: Response, next: NextFunction) => {
     const result = await createAcademicDepartmentDB(req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -14,8 +12,7 @@ export const createAcademicDepartmentController = catchAsync(
       message: "Academic Department Created Success",
       data: result,
     });
-  }
-);
+  };
 
 export const getAllAcademicDepartmentController = async (req: Request, res: Response) => {
   try {

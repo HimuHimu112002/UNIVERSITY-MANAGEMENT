@@ -1,11 +1,12 @@
 import app from "./app";
+import config from "./app/config";
 import DatabaseConnection from "./dataBase/db";
-DatabaseConnection()
+DatabaseConnection();
 
 async function main() {
   try {
-    app.listen(5000, () => {
-      console.log(`This is server site running 5000`);
+    app.listen(config.port, () => {
+      console.log(`This is server site running ${config.port}`);
     });
   } catch (err) {
     console.log(err);
