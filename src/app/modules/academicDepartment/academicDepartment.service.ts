@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { TAcademicDepartment } from "./academicDepartment.interface";
 import { AcademicDepartmentyModel } from "./academicDepartment.model";
+import { Response } from "express";
 
 export const createAcademicDepartmentDB = async (payload: TAcademicDepartment) => {
   const result = await AcademicDepartmentyModel.create(payload);

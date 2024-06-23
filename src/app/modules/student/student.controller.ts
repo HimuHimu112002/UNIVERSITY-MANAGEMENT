@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
-import { StudentServices, getAllStudentsFromDB, getFilterSearchStudentsFromDB, getFilterStudentsFromDB, updateStudentFromDB } from "./student.service";
+import { StudentServices, getAllStudentsFromDB, getFilterSearchStudentsFromDB, getFilterStudentsFromDB, getPaginateSearchStudentsFromDB, getfieldsSearchStudentsFromDB, updateStudentFromDB } from "./student.service";
 import { Request, Response } from "express";
 import { Student } from "./student.model";
 import AppError from "../../errors/AppError";
@@ -44,6 +44,42 @@ export const getFilterStudents = async (req: Request, res: Response) => {
       success: true,
       message: "Student data filtering success !",
       data: result,
+    });
+  }catch(err: any){
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      error: err,
+    })
+  }
+};
+
+export const getPaginationStudents = async (req: Request, res: Response) => {
+  try{
+    const result1 = await getPaginateSearchStudentsFromDB(req.query);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Student data paginate success !",
+      data: result1,
+    });
+  }catch(err: any){
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      error: err,
+    })
+  }
+};
+
+export const getFieldsStudents = async (req: Request, res: Response) => {
+  try{
+    const result1 = await getfieldsSearchStudentsFromDB(req.query);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Student data paginate success !",
+      data: result1,
     });
   }catch(err: any){
     return res.status(400).json({
