@@ -17,10 +17,10 @@ export interface IUserModel extends Model<TUser> {
 
 
   //instance methods for checking if passwords are matched
-  // isPasswordMatched(
-  //   plainTextPassword: string,
-  //   hashedPassword: string
-  // ): Promise<boolean>;
+  isPasswordMatched(
+    plainTextPassword: string,
+    hashedPassword: string
+  ): Promise<boolean>;
 
   isJWTIssuedBeforePasswordChanged(
     passwordChangedTimestamp: Date,

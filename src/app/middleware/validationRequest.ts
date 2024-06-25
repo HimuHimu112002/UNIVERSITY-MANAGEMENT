@@ -6,6 +6,7 @@ export const validateRequest = (validSchema: AnyZodObject) => {
     try{
       await validSchema.parseAsync({
         body: req.body, // validation body theke data guli recived korbe akhane body: req.body dile zod validation body use kortye hobe r jodi akhane body use na kori tahole zod body use korte hobena data send hobe
+        cookies: req.cookies
       });
       next();
     }catch(err){

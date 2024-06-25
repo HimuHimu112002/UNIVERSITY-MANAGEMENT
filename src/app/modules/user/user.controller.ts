@@ -1,4 +1,4 @@
-import {RequestHandler, Response } from "express";
+import { RequestHandler, Response } from "express";
 import {
   createAdminIntoDB,
   createFacultyIntoDB,
@@ -11,13 +11,13 @@ import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { UserModel } from "./user.model";
 
-const createUserController: RequestHandler = async (req,res,next) => {
+const createUserController: RequestHandler = async (req, res, next) => {
   try {
-  // let user_role = req.headers.user_role
-  // const result = await UserModel.findOne({role: user_role});
-  // if(user_role === result){
-  //   console.log("done")
-  // }
+    // let user_role = req.headers.user_role
+    // const result = await UserModel.findOne({role: user_role});
+    // if(user_role === result){
+    //   console.log("done")
+    // }
     const { password, student: studentData } = req.body;
     //const {password, user akhen just user dile kaj korena} = req.body;
     bcrypt.hash(password, 10, async function (err, hash) {
@@ -25,11 +25,10 @@ const createUserController: RequestHandler = async (req,res,next) => {
         statusCode: httpStatus.OK,
         success: true,
         message: "User information created success",
-        data: await createUser(hash, studentData)
-      })
+        data: await createUser(hash, studentData),
+      });
     });
-    
-  }catch (err: any) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: "fail",
@@ -81,28 +80,34 @@ const createFacultyController: RequestHandler = async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is created succesfully',
+    message: "Faculty is created succesfully",
     data: result,
   });
 };
 
 const createAdmin: RequestHandler = async (req, res) => {
-  const { password, admin: adminData } = req.body;
-
-  const result = await createAdminIntoDB(password, adminData);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Admin is created succesfully',
-    data: result,
-  });
+  try {
+    const { password, admin: adminData } = req.body;
+    bcrypt.hash(password, 10, async function (err, hash) {
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Admin information created success",
+        data: await createAdminIntoDB(hash, adminData),
+      });
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "fail",
+      data: err.message,
+    });
+  }
 };
-
 export const UserController = {
   createUserController,
   getAllUserController,
   getSingleUserController,
   createFacultyController,
-  createAdmin
+  createAdmin,
 };

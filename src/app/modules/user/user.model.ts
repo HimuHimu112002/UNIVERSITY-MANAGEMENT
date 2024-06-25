@@ -43,11 +43,11 @@ userSchema.statics.isUserExistsByCustomId = async function (id: string) {
   return await UserModel.findOne({ id }).select('+password');
 };
 
-// userSchema.statics.isPasswordMatched = async function (
-//   plainTextPassword,
-//   hashedPassword
-// ) {
-//   return await bcrypt.compare(plainTextPassword, hashedPassword);
-// };
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
 
 export const UserModel = model<TUser, IUserModel>("User", userSchema);

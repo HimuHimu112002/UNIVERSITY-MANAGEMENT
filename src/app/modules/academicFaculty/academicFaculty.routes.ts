@@ -13,8 +13,6 @@ router.post(
 )
 
 router.get(
-  "/get-academicFaculty", auth() , getAcademicFacultyController
+  "/get-academicFaculty", auth(USER_ROLE.admin, USER_ROLE.faculty) , getAcademicFacultyController
 )
-
-
 export const AcademicFacultyRoute= router;
