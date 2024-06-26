@@ -16,6 +16,7 @@ import { TFaculty } from "../facultys/faculty.interface";
 import { AcademicDepartmentyModel } from "../academicDepartment/academicDepartment.model";
 import { Admin } from "../Admin/admin.model";
 import config from "../../config";
+import { verifyToken } from "../Auth/auth.utils";
 
 export const createUser = async (password: string, payload: TStudent) => {
 
@@ -26,6 +27,7 @@ export const createUser = async (password: string, payload: TStudent) => {
 
   //set student role
   userData.role = "student";
+  userData.email = payload.email;
 
   // find academic semester info
   const admissionSemester = await AcademicModel.findById(
@@ -95,6 +97,7 @@ export const createFacultyIntoDB = async (
 
   //set student role
   userData.role = "faculty";
+  userData.email = payload.email;
 
   // find academic department info
   const academicDepartment = await AcademicDepartmentyModel.findById(
@@ -154,6 +157,7 @@ export const createAdminIntoDB = async (
 
   //set student role
   userData.role = "admin";
+  userData.email = payload.email;
 
   const session = await mongoose.startSession();
 
@@ -189,4 +193,27 @@ export const createAdminIntoDB = async (
     await session.endSession();
     throw new Error(err);
   }
+};
+
+export const personalgetMe = async (userId: string, role: string) => {
+  let result = null;
+  if (role === 'student') {
+    result = await Student.findOne({ id: userId }).populate('user');
+  }
+  if (role === 'admin') {
+    result = await Admin.findOne({ id: userId }).populate('user');
+  }
+
+  if (role === 'faculty') {
+    result = await Faculty.findOne({ id: userId }).populate('user');
+  }
+
+  return result;
+};
+
+export const changeStatusService = async (id: string, payload: { status: string }) => {
+  const result = await UserModel.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return result;
 };

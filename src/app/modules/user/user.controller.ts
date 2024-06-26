@@ -1,15 +1,18 @@
 import { RequestHandler, Response } from "express";
 import {
+  changeStatusService,
   createAdminIntoDB,
   createFacultyIntoDB,
   createUser,
   getAllUserService,
   getSingleUserService,
+  personalgetMe,
 } from "./user.service";
 import bcrypt from "bcrypt";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { UserModel } from "./user.model";
+import AppError from "../../errors/AppError";
 
 const createUserController: RequestHandler = async (req, res, next) => {
   try {
@@ -104,10 +107,41 @@ const createAdmin: RequestHandler = async (req, res) => {
     });
   }
 };
+
+const getMe = async (req: Request, res: Response) => {
+
+  const { userId, role } = req.user;
+
+  const result = await personalgetMe(userId, role);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User is retrieved succesfully',
+    data: result,
+  });
+};
+
+
+const changeStatus = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await changeStatusService(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Status is updated succesfully',
+    data: result,
+  });
+};
+
 export const UserController = {
   createUserController,
   getAllUserController,
   getSingleUserController,
   createFacultyController,
   createAdmin,
+  getMe,
+  changeStatus
 };
