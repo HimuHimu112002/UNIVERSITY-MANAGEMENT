@@ -31,7 +31,7 @@ const localGuardianSchema = z.object({
 export const studentValidationSchema = z.object({
   body: z.object({
     // body akti object akhen theke router body te data guli pass hobe 
-    password: z.string().max(20),
+    password: z.string().max(20).optional(),
     // student: z.object deoyar karon amra postman theke avebe data sutdent object diye pass kortesi
     student: z.object({
       name: userNameSchema,
@@ -46,7 +46,7 @@ export const studentValidationSchema = z.object({
       guardian: guardianSchema,
       localGuardian: localGuardianSchema,
       admissionSemester: z.string(),
-      profileImg: z.string(),
+      //profileImg: z.string(),
     })
     // jei model guli auto backend theke implemets hobe seguli zod validation korar dorkar nai ex: isActive and isDeleted and id backend theke asbe
     // id: z.string(),

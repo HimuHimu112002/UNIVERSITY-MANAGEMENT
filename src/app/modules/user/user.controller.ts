@@ -1,4 +1,4 @@
-import { RequestHandler, Response } from "express";
+import {RequestHandler, Response } from "express";
 import {
   changeStatusService,
   createAdminIntoDB,
@@ -11,33 +11,25 @@ import {
 import bcrypt from "bcrypt";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { UserModel } from "./user.model";
-import AppError from "../../errors/AppError";
 
 const createUserController: RequestHandler = async (req, res, next) => {
-  try {
-    // let user_role = req.headers.user_role
-    // const result = await UserModel.findOne({role: user_role});
-    // if(user_role === result){
-    //   console.log("done")
-    // }
-    const { password, student: studentData } = req.body;
-    //const {password, user akhen just user dile kaj korena} = req.body;
-    bcrypt.hash(password, 10, async function (err, hash) {
-      sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "User information created success",
-        data: await createUser(hash, studentData),
-      });
+  const { password, student: studentData } = req.body;
+  // const result = await createUser(
+  //   password,
+  //   studentData,
+  // );
+  bcrypt.hash(password, 10, async function (err, hash) {
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Student information created success",
+      data: await createUser(
+        hash,
+        studentData,
+      )
     });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: "fail",
-      data: err.message,
-    });
-  }
+  });
+
 };
 
 const getAllUserController: RequestHandler = async (req, res) => {
@@ -78,13 +70,17 @@ const getSingleUserController: RequestHandler = async (req, res) => {
 const createFacultyController: RequestHandler = async (req, res) => {
   const { password, faculty: facultyData } = req.body;
 
-  const result = await createFacultyIntoDB(password, facultyData);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Faculty is created succesfully",
-    data: result,
+  //const result = await createFacultyIntoDB(password, facultyData);
+  bcrypt.hash(password, 10, async function (err, hash) {
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Faculty is created succesfully",
+      data: await createFacultyIntoDB(
+        hash,
+        facultyData,
+      )
+    });
   });
 };
 
@@ -123,7 +119,7 @@ const getMe = async (req: Request, res: Response) => {
 };
 
 
-const changeStatus = async (req: Request, res: Response) => {
+const changeStatus = async (req: any, res: any) => {
   const id = req.params.id;
 
   const result = await changeStatusService(id, req.body);

@@ -16,12 +16,10 @@ import { TFaculty } from "../facultys/faculty.interface";
 import { AcademicDepartmentyModel } from "../academicDepartment/academicDepartment.model";
 import { Admin } from "../Admin/admin.model";
 import config from "../../config";
-import { verifyToken } from "../Auth/auth.utils";
+import { sendImageToCloudinary } from "../../utils/sendImageCloudinary";
 
-export const createUser = async (password: string, payload: TStudent) => {
-
+export const createUser = async ( password: string, payload: TStudent) => {
   const userData: Partial<TUser> = {};
-
   //if password is not given , use deafult password
   userData.password = password || (config.default_password as string);
 
@@ -45,6 +43,10 @@ export const createUser = async (password: string, payload: TStudent) => {
     //set  generated id
     userData.id = await generateStudentId(admissionSemester);
 
+    // coudinay
+    // const imageName = `${userData.id}${payload?.name?.firstName}`
+    // const path = file?.path
+    // const {secure_url} = await sendImageToCloudinary(imageName, path)
     // create a user (transaction-1)
     const newUser = await UserModel.create([userData], { session });
 
@@ -55,6 +57,7 @@ export const createUser = async (password: string, payload: TStudent) => {
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
+    // payload.profileImg = secure_url
 
     //(transaction-2)
     const newStudent = await Student.create([payload], { session });
