@@ -10,6 +10,7 @@ cloudinary.config({
 });
 
 export const sendImageToCloudinary = (imageName: string, path: string) => {
+  console.log("hemo",imageName, path)
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       path,

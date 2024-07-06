@@ -15,6 +15,7 @@ import httpStatus from "http-status";
 const createUserController: RequestHandler = async (req, res, next) => {
   const { password, student: studentData } = req.body;
   // const result = await createUser(
+  //   req.file,
   //   password,
   //   studentData,
   // );
@@ -24,7 +25,8 @@ const createUserController: RequestHandler = async (req, res, next) => {
       success: true,
       message: "Student information created success",
       data: await createUser(
-        hash,
+        req.file,
+        password,
         studentData,
       )
     });
