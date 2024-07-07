@@ -9,10 +9,11 @@ import { USER_ROLE } from "../user/user.constant";
 const router = express.Router();
 router.post(
   "/create-academicFaculty",
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(AcademicFacultyValidationSchema), createAcademicFacultyController
 )
 
-router.get(
-  "/get-academicFaculty", auth(USER_ROLE.admin, USER_ROLE.faculty) , getAcademicFacultyController
+router.get( 
+  "/get-academicFaculty", auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty) , getAcademicFacultyController
 )
 export const AcademicFacultyRoute= router;

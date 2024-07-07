@@ -88,7 +88,7 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
     },
   },
 );
-
+//"academicDepartment": "66573b21b08b89246e51eef7"
 // generating full name
 adminSchema.virtual('fullName').get(function () {
   return (

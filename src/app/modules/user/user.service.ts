@@ -19,7 +19,6 @@ import config from "../../config";
 import { sendImageToCloudinary } from "../../utils/sendImageCloudinary";
 
 export const createUser = async ( file: any, password: string, payload: TStudent) => {
-  console.log("this",file)
   const userData: Partial<TUser> = {};
   //if password is not given , use deafult password
   userData.password = password || (config.default_password as string);
@@ -37,6 +36,17 @@ export const createUser = async ( file: any, password: string, payload: TStudent
     throw new AppError(400, "Admission semester not found");
   }
 
+  // find academic department info
+  const academicDepartment = await AcademicModel.findById(
+    payload.admissionDepartment
+  );
+
+  if (!academicDepartment) {
+    throw new AppError(400, "Admission department not found");
+  }
+
+  //payload.academicFaculty = academicDepartment.academicFaculty;
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -52,11 +62,7 @@ export const createUser = async ( file: any, password: string, payload: TStudent
       const { secure_url } = await sendImageToCloudinary(imageName, path);
       payload.profileImg = secure_url as string;
     }
-    // coudinay
-    // const imageName = `${userData.id}${payload?.name?.firstName}`
-    // const path = file?.path
-    // const { secure_url } = await sendImageToCloudinary(imageName, path);
-  
+
     // create a user (transaction-1)
     const newUser = await UserModel.create([userData], { session });
     //create a student
@@ -66,7 +72,6 @@ export const createUser = async ( file: any, password: string, payload: TStudent
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    //payload.profileImg = secure_url
 
     //(transaction-2)
     const newStudent = await Student.create([payload], { session });
@@ -120,6 +125,8 @@ export const createFacultyIntoDB = async (
     throw new AppError(400, "Academic department not found");
   }
 
+  payload.academicFaculty = academicDepartment.academicFaculty
+  
   const session = await mongoose.startSession();
 
   try {
