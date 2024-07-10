@@ -4,6 +4,7 @@ import {
   createCourse,
   deleteCourse,
   getAllCourses,
+  getFacultiesWithCourse,
   getSingleCourse,
   updateCourse,
 } from "./course.controller";
@@ -35,6 +36,13 @@ router.put(
   auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   assignFacultiesWithCourse
 );
+
+router.get(
+  "/getFaculty/:courseId/getCourseWith-faculty",
+  // auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  getFacultiesWithCourse
+);
+
 router.get("/getAll-course-query", getAllCourses);
 router.get("/getSingle-course/:id", getSingleCourse);
 export const CourseRoutes = router;
